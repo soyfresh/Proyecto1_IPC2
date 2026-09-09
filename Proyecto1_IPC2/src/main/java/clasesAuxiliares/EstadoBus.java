@@ -1,0 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
+ */
+package clasesAuxiliares;
+
+/**
+ *
+ * @author dar333n
+ */
+public enum EstadoBus {
+    DISPONIBLE,
+    EN_TRANSITO,
+    NO_DISPONIBLE
+}
