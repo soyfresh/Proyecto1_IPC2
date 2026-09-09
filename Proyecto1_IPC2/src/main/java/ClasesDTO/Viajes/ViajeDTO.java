@@ -17,10 +17,10 @@ public abstract class ViajeDTO {
     private TipoViaje tipoViaje;
     private int idSucursal;
     private EstadoViaje estadoViaje;
-    private double kilometrajeActual;
+    private int kilometrajeActual;
     private LocalTime horaRealSalida;
     private LocalTime horaRealLlegada;
-    private double kilometrajeFinal;
+    private int kilometrajeFinal;
     private double gastoTotalCombustible;
     private String placaBusAsignado;
     private String dpiChofer;
@@ -33,8 +33,8 @@ public abstract class ViajeDTO {
     }
 
     //PARA LECTURAS
-    public ViajeDTO(int idViaje, EstadoViaje estadoViaje, double kiloetrajeActual, LocalTime horaRealSalida, 
-            LocalTime horaRealLlegada, double kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, 
+    public ViajeDTO(int idViaje, EstadoViaje estadoViaje, int kiloetrajeActual, LocalTime horaRealSalida, 
+            LocalTime horaRealLlegada, int kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, 
             String dpiChofer,  int idSucursal, TipoViaje tipoViaje) {
         
         this.idViaje = idViaje;
@@ -83,14 +83,6 @@ public abstract class ViajeDTO {
         this.horaRealLlegada = horaRealLlegada;
     }
 
-    public double getKilometrajeFinal() {
-        return kilometrajeFinal;
-    }
-
-    public void setKilometrajeFinal(double kilometrajeFinal) {
-        this.kilometrajeFinal = kilometrajeFinal;
-    }
-
     public double getGastoTotalCombustible() {
         return gastoTotalCombustible;
     }
@@ -131,13 +123,22 @@ public abstract class ViajeDTO {
         this.idSucursal = idSucursal;
     }
 
-    public double getKilometrajeActual() {
+    public int getKilometrajeActual() {
         return kilometrajeActual;
     }
 
-    public void setKilometrajeActual(double kilometrajeActual) {
+    public void setKilometrajeActual(int kilometrajeActual) {
         this.kilometrajeActual = kilometrajeActual;
     }
+
+    public int getKilometrajeFinal() {
+        return kilometrajeFinal;
+    }
+
+    public void setKilometrajeFinal(int kilometrajeFinal) {
+        this.kilometrajeFinal = kilometrajeFinal;
+    }
+
     
     
  

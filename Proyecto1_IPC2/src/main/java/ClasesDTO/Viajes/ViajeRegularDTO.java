@@ -30,8 +30,8 @@ public class ViajeRegularDTO extends ViajeDTO{
     }
 
     //PARA LECTURAS-lectura completa del viaje
-    public ViajeRegularDTO(int idViaje, EstadoViaje estadoViaje, double kiloetrajeActual, LocalTime horaRealSalida, 
-            LocalTime horaRealLlegada, double kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, 
+    public ViajeRegularDTO(int idViaje, EstadoViaje estadoViaje, int kiloetrajeActual, LocalTime horaRealSalida, 
+            LocalTime horaRealLlegada, int kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, 
             String dpiChofer, int idRuta, LocalDateTime fechaHoraProgramadaSalida, LocalDateTime fechaHoraEstimadaLlegada, int idSucursal) {
         super(idViaje, estadoViaje, kiloetrajeActual, horaRealSalida, horaRealLlegada, kilometrajeFinal, 
                 gastoTotalCombustible, placaBusAsignado, dpiChofer, idSucursal, TipoViaje.REGULAR);

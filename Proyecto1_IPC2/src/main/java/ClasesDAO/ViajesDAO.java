@@ -320,7 +320,7 @@ public class ViajesDAO {
             ps.setString(1, viaje.getPlacaBusAsignado());
             ps.setString(2, viaje.getDpiChofer());
             ps.setObject(3, viaje.getHoraRealSalida());
-            ps.setDouble(4, viaje.getKilometrajeActual());
+            ps.setInt(4, viaje.getKilometrajeActual());
             ps.setInt(5, viaje.getIdViaje());
             return ps.executeUpdate()> 0;
         }
@@ -329,7 +329,7 @@ public class ViajesDAO {
     public boolean registrarLlegada(ViajeDTO viaje) throws SQLException{
         try(PreparedStatement ps= connection.prepareStatement(REGISTRAR_LLEGADA)){
             ps.setObject(1, viaje.getHoraRealLlegada());
-            ps.setDouble(2, viaje.getKilometrajeFinal());
+            ps.setInt(2, viaje.getKilometrajeFinal());
             ps.setDouble(3, viaje.getGastoTotalCombustible());
             ps.setInt(4, viaje.getIdViaje());
             return ps.executeUpdate() > 0;
@@ -461,10 +461,10 @@ public class ViajesDAO {
         return new ViajeRegularDTO(
             rs.getInt("id_viaje"),
             estado,
-            rs.getDouble("kilometraje_actual_bus"),
+            rs.getInt("kilometraje_actual_bus"),
             horaSalida,
             horaLlegada,
-            rs.getDouble("kilometraje_final_bus"),
+            rs.getInt("kilometraje_final_bus"),
             rs.getDouble("total_de_gasto_combustible"),
             rs.getString("numero_de_placa"),
             rs.getString("dpi_chofer"),
@@ -497,10 +497,10 @@ public class ViajesDAO {
             rs.getDouble("precio_final"),
             rs.getInt("id_viaje"),
             estado,
-            rs.getDouble("kilometraje_actual_bus"),
+            rs.getInt("kilometraje_actual_bus"),
             horaSalida,
             horaLlegada,
-            rs.getDouble("kilometraje_final_bus"),
+            rs.getInt("kilometraje_final_bus"),
             rs.getDouble("total_de_gasto_combustible"),
             rs.getString("numero_de_placa"),
             rs.getString("dpi_chofer"),

@@ -49,8 +49,8 @@ public class ViajePrivadoDTO extends ViajeDTO{
     //PARA LECTURAS-lectura completa del viaje
     public ViajePrivadoDTO(String dpiCliente, String origen, String destino, int numeroPasajeros, LocalDate fechasalida, 
             LocalDate fechaRetorno, LocalDate fechaPago, double PrecioEstimado, double precioFinal, int idViaje, 
-            EstadoViaje estadoViaje, double kiloetrajeActual, LocalTime horaRealSalida, LocalTime horaRealLlegada, 
-            double kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, String dpiChofer, Departamento departamentoOrigen, 
+            EstadoViaje estadoViaje, int kiloetrajeActual, LocalTime horaRealSalida, LocalTime horaRealLlegada, 
+            int kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, String dpiChofer, Departamento departamentoOrigen, 
             Departamento departamentoDestino, int idSucursal) {
         
         super(idViaje, estadoViaje, kiloetrajeActual, horaRealSalida, horaRealLlegada, kilometrajeFinal, 

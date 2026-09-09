@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectionDB {
     
     private static final String IP = "localhost";
-    private static final int PUERTO = 8080;
+    private static final int PUERTO = 3306;
     private static final String SCHEMA = "AppWeb_Buses";
     public static final String USER_NAME = "daren";
     public static final String PASSWORD = "Gye36_ftoc6";

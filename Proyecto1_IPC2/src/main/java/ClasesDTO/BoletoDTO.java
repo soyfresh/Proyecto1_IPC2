@@ -21,7 +21,7 @@ public class BoletoDTO {
     private List<DetalleBoletoDTO> detalle;
 
     //PARA INSTANCIAS
-    public BoletoDTO(int total, LocalDate fechaCompra, int idViaje, String dpiCliente) { 
+    public BoletoDTO(double total, LocalDate fechaCompra, int idViaje, String dpiCliente) { 
 
         /*
         debe haber un metodo que genere el detalle en la clase donde se cree la instancia 
@@ -36,7 +36,7 @@ public class BoletoDTO {
     }
 
     //PARA LECTURAS
-    public BoletoDTO(int idBoleto, int total, LocalDate fechaCompra, int idViaje, String dpiCliente, List<DetalleBoletoDTO> detalle) {
+    public BoletoDTO(int idBoleto, double total, LocalDate fechaCompra, int idViaje, String dpiCliente, List<DetalleBoletoDTO> detalle) {
         this.idBoleto = idBoleto;
         this.total = total;
         this.fechaCompra = fechaCompra;
@@ -57,7 +57,7 @@ public class BoletoDTO {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 

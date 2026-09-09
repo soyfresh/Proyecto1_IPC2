@@ -16,13 +16,14 @@ public class BusDTO {
     private String marca;
     private int anoFabricacion;
     private int capacidad;
-    private double kilometrajeActual;
+    private int kilometrajeActual;
     private byte[] foto;
     private EstadoBus estadoBus;
     private boolean activo; 
+    private int idSucursal;
 
     //PARA INSTANCIAS
-    public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, double kilometrajeActual, byte[] foto) {
+    public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, int kilometrajeActual, byte[] foto, int idSucursal) {
         this.numeroPlaca = numeroPlaca;
         this.modelo = modelo;
         this.marca = marca;
@@ -30,10 +31,12 @@ public class BusDTO {
         this.capacidad = capacidad;
         this.kilometrajeActual = kilometrajeActual;
         this.foto = foto;
+        this.idSucursal=idSucursal;
     }
     
     //PARA LECTURAS
-    public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, double kilometrajeActual, byte[] foto, EstadoBus estadoBus, boolean activo) {
+    public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, 
+            int kilometrajeActual, byte[] foto, EstadoBus estadoBus, boolean activo, int idSucursal) {
         this.numeroPlaca = numeroPlaca;
         this.modelo = modelo;
         this.marca = marca;
@@ -43,6 +46,7 @@ public class BusDTO {
         this.foto = foto;
         this.estadoBus = estadoBus;
         this.activo = activo;
+        this.idSucursal=idSucursal;
     }
 
     public String getNumeroPlaca() {
@@ -85,11 +89,12 @@ public class BusDTO {
         this.capacidad = capacidad;
     }
 
-    public double getKilometrajeActual() {
+    public int getKilometrajeActual() {
         return kilometrajeActual;
     }
 
-    public void setKilometrajeActual(double kilometrajeActual) {
+
+    public void setKilometrajeActual(int kilometrajeActual) {
         this.kilometrajeActual = kilometrajeActual;
     }
 
@@ -115,6 +120,14 @@ public class BusDTO {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    public int getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(int idSucursal) {
+        this.idSucursal = idSucursal;
     }
     
     
