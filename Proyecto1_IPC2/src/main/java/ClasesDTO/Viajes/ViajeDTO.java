@@ -25,13 +25,22 @@ public abstract class ViajeDTO {
     private String placaBusAsignado;
     private String dpiChofer;
 
-    //CONSTRUCTOR PARA INSTANCIA VIAJE REGULAR/PRIVADO
+    //CONSTRUCTOR PARA INSTANCIA VIAJEPRIVADO
     public ViajeDTO(EstadoViaje estadoViaje, int idSucursal, TipoViaje tipoViaje) {
         this.estadoViaje = estadoViaje;
         this.idSucursal=idSucursal;
         this.tipoViaje=tipoViaje;
     }
 
+    //CONSTRUCTOR PARA INSTANCIA VIAJE REGULAR
+    public ViajeDTO(EstadoViaje estadoViaje, int idSucursal, TipoViaje tipoViaje, String placaBusAsignado, String dpiChofer) {
+        this.tipoViaje = tipoViaje;
+        this.idSucursal = idSucursal;
+        this.estadoViaje = estadoViaje;
+        this.placaBusAsignado = placaBusAsignado;
+        this.dpiChofer = dpiChofer;
+    }
+   
     //PARA LECTURAS
     public ViajeDTO(int idViaje, EstadoViaje estadoViaje, int kiloetrajeActual, LocalTime horaRealSalida, 
             LocalTime horaRealLlegada, int kilometrajeFinal, double gastoTotalCombustible, String placaBusAsignado, 

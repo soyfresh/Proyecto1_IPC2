@@ -39,11 +39,12 @@ public class BoletoDAO {
     public static final String OBTENER_BOLETOS_VIAJE="SELECT * FROM boleto WHERE id_viaje=?";
     
     public static final String OBTENER_ASIENTOS_OCUPADOS="""
-                                                         SELECT * FROM detalle_boleto INNER JOIN boleto.id_boleto=detalle_boleto.id_boleto
+                                                         SELECT * FROM detalle_boleto INNER JOIN boleto ON boleto.id_boleto=detalle_boleto.id_boleto
                                                          WHERE id_viaje=?;
                                                          """;
     
-    
+    public static final String TIENE_ALGUN_BOLETO_ASOCIADO="SELECT COUNT(*) FROM boleto WHERE id_viaje=?;";
+            
     
     private Connection connection;
     
@@ -76,7 +77,7 @@ public class BoletoDAO {
     public boolean agregarDetalle(DetalleBoletoDTO detalle) throws SQLException{
         try (PreparedStatement ps= connection.prepareStatement(GISTRAR_DETALLE_BOLETO)){
             ps.setInt(1, detalle.getIdBoleto());
-            ps.setString(2, detalle.getIdAsiento());
+            ps.setInt(2, detalle.getIdAsiento());
             return ps.executeUpdate()>0;
         }
     }
@@ -163,9 +164,21 @@ public class BoletoDAO {
     
     public DetalleBoletoDTO empaquetarDetalle(ResultSet rs) throws SQLException{
         int idBoleto=rs.getInt("id_boleto");
-        String idAsiento=rs.getString("numero_de_asiento_ocupado");
+        int idAsiento=rs.getInt("numero_de_asiento_ocupado");
         
         return new DetalleBoletoDTO(idBoleto, idAsiento);
+    }
+    
+    public boolean tieneBoletosAsociados(int idViaje) throws SQLException {
+        try (PreparedStatement ps=connection.prepareStatement(TIENE_ALGUN_BOLETO_ASOCIADO)){
+            ps.setInt(1, idViaje);
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()) {
+                    return rs.getInt(1)>0;
+                }
+            }
+        }
+        return false;
     }
 
 }

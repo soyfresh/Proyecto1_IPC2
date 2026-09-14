@@ -22,7 +22,7 @@ public class ViajeRegularDTO extends ViajeDTO{
     //CONSTRUCTOR PARA INSTANCIAS
     public ViajeRegularDTO(String placaBusAsignado, String dpiChofer, int idRuta,
             LocalDateTime fechaHoraProgramadaSalida, LocalDateTime fechaHoraEstimadaLlegada, int idSucursal) {
-        super(EstadoViaje.PROGRAMADO, idSucursal, TipoViaje.REGULAR);
+        super(EstadoViaje.PROGRAMADO, idSucursal, TipoViaje.REGULAR, placaBusAsignado, dpiChofer);
         
         this.idRuta=idRuta;
         this.fechaHoraProgramadaSalida=fechaHoraProgramadaSalida;

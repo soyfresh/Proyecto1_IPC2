@@ -60,26 +60,14 @@ public class ViajesDAO {
     
     //RECUPERAN LOS DATOS PARA MOSTRARLOS EN LOS CUADROS DEL FORMULARIO
     public static final String OBTENER_VIAJE_REGULAR_CON_ID="""
-                                                            SELECT viaje.*, viaje_regular.fecha_y_hora_de_salida, viaje_regular.fecha_y_hora_estimada_de_llegada, viaje_regular.id_ruta 
+                                                            SELECT viaje.*, viaje_regular.*
                                                             FROM viaje 
                                                             INNER JOIN viaje_regular ON viaje.id_viaje = viaje_regular.id_viaje 
                                                             WHERE viaje.id_viaje=?;
                                                             """;
     
     public static final String OBTENER_VIAJE_PRIVADO_CON_ID="""
-                                                            SELECT 
-                                                            viaje.*, 
-                                                            viaje_privado.origen, 
-                                                            viaje_privado.destino, 
-                                                            viaje_privado.departamentoOrigen, 
-                                                            viaje_privado.departamentoDestino, 
-                                                            viaje_privado.numero_de_pasajeros, 
-                                                            viaje_privado.fecha_de_salida, 
-                                                            viaje_privado.fecha_de_retorno, 
-                                                            viaje_privado.precio_estimado, 
-                                                            viaje_privado.precio_final, 
-                                                            viaje_privado.fecha_de_pago, 
-                                                            viaje_privado.dpi_cliente 
+                                                            SELECT viaje.*, viaje_privado.* 
                                                             FROM viaje 
                                                             INNER JOIN viaje_privado ON viaje.id_viaje = viaje_privado.id_viaje 
                                                             WHERE viaje.id_viaje=?;
@@ -97,7 +85,6 @@ public class ViajesDAO {
                                                        UPDATE viaje_regular SET 
                                                        fecha_y_hora_de_salida=?, 
                                                        fecha_y_hora_estimada_de_llegada=?, 
-                                                       id_ruta=? 
                                                        WHERE id_viaje=?;
                                                        """;
     
@@ -123,29 +110,18 @@ public class ViajesDAO {
     
     //VIAJES REGULARES DISPONIBLES, SOLO DE UNA SUCURSAL 
     public static final String VER_VIAJES_REGULARES="""
-                                                    SELECT viaje.*, viaje_regular.fecha_y_hora_de_salida, viaje_regular.fecha_y_hora_estimada_de_llegada, viaje_regular.id_ruta 
+                                                    SELECT viaje.*, viaje_regular.*
                                                     FROM viaje 
                                                     INNER JOIN viaje_regular ON viaje.id_viaje=viaje_regular.id_viaje 
                                                     WHERE viaje.id_sucursal=? AND viaje.tipo='REGULAR' AND viaje.estado_viaje = 'PROGRAMADO';
                                                     """;
     
     //VIAJES PRIVADO, SOLO DE UNA SUCURSAL 
-    public static final String VER_SOLICITUDES_PRIVADO="""
-                                                        SELECT viaje.*, 
-                                                        viaje_privado.origen, 
-                                                        viaje_privado.destino, 
-                                                        viaje_privado.departamentoOrigen, 
-                                                        viaje_privado.departamentoDestino, 
-                                                        viaje_privado.numero_de_pasajeros, 
-                                                        viaje_privado.fecha_de_salida, 
-                                                        viaje_privado.fecha_de_retorno, 
-                                                        viaje_privado.precio_estimado, 
-                                                        viaje_privado.precio_final, 
-                                                        viaje_privado.fecha_de_pago, 
-                                                        viaje_privado.dpi_cliente 
+    public static final String VER_PROGRAMADOS_PRIVADO="""
+                                                        SELECT viaje.*, viaje_privado.*
                                                         FROM viaje 
                                                         INNER JOIN viaje_privado ON viaje.id_viaje=viaje_privado.id_viaje 
-                                                        WHERE viaje.id_sucursal=? AND viaje.tipo='PRIVADO';
+                                                        WHERE viaje.id_sucursal=? AND viaje.tipo='PRIVADO' AND viaje.estado_viaje='PROGRAMADO';
                                                        """;
     
     public static final String RECHAZAR_VIAJE_PRIVADO="UPDATE viaje SET estado_viaje='RECHAZADO' WHERE id_viaje=?;";
@@ -168,55 +144,62 @@ public class ViajesDAO {
 
     public static final String ELIMINAR_VIAJE="DELETE FROM viaje WHERE id_viaje=?";
     
+    
+    //PARA VERIFICAR SI SE PUEDE ASIGNAR A ESA HORA
     public static final String VER_VIAJES_REGULARES_POR_CHOFER="""
-                                                            SELECT viaje.*, 
-                                                            viaje_regular.fecha_y_hora_de_salida, 
-                                                            viaje_regular.fecha_y_hora_estimada_de_llegada, 
-                                                            viaje_regular.id_ruta
+                                                            SELECT viaje.*, viaje_regular.*
                                                             FROM viaje
                                                             INNER JOIN viaje_regular 
                                                             ON viaje.id_viaje = viaje_regular.id_viaje
                                                             WHERE viaje.dpi_chofer = ? 
                                                             AND viaje.estado_viaje IN ('PROGRAMADO', 'INICIADO');
                                                             """;
+    
+    public static final String VER_VIAJES_REGULARES_POR_BUS="""
+                                                            SELECT viaje.*, viaje_regular.*
+                                                            FROM viaje
+                                                            INNER JOIN viaje_regular 
+                                                            ON viaje.id_viaje = viaje_regular.id_viaje
+                                                            WHERE viaje.numero_de_placa = ? 
+                                                            AND viaje.estado_viaje IN ('PROGRAMADO', 'INICIADO');
+                                                            """;
 
     public static final String VER_VIAJES_PRIVADOS_POR_CHOFER="""
-                                                            SELECT viaje.*, 
-                                                            viaje_privado.origen, 
-                                                            viaje_privado.destino, 
-                                                            viaje_privado.departamentoOrigen, 
-                                                            viaje_privado.departamentoDestino, 
-                                                            viaje_privado.numero_de_pasajeros, 
-                                                            viaje_privado.fecha_de_salida, 
-                                                            viaje_privado.fecha_de_retorno, 
-                                                            viaje_privado.precio_estimado, 
-                                                            viaje_privado.precio_final, 
-                                                            viaje_privado.fecha_de_pago, 
-                                                            viaje_privado.dpi_cliente
+                                                            SELECT viaje.*, viaje_privado.*
                                                             FROM viaje
                                                             INNER JOIN viaje_privado 
                                                             ON viaje.id_viaje = viaje_privado.id_viaje
                                                             WHERE viaje.dpi_chofer = ? 
-                                                            AND viaje.estado_viaje IN ('PROGRAMADO', 'INICIADO');
+                                                            AND viaje.estado_viaje = 'PROGRAMADO';
                                                             """;
     
-    public static final String VER_MIS_SOLICITUDES_PRIVADO="""
-                                                        SELECT viaje.*, 
-                                                        viaje_privado.origen, 
-                                                        viaje_privado.destino, 
-                                                        viaje_privado.departamentoOrigen, 
-                                                        viaje_privado.departamentoDestino, 
-                                                        viaje_privado.numero_de_pasajeros, 
-                                                        viaje_privado.fecha_de_salida, 
-                                                        viaje_privado.fecha_de_retorno, 
-                                                        viaje_privado.precio_estimado, 
-                                                        viaje_privado.precio_final, 
-                                                        viaje_privado.fecha_de_pago, 
-                                                        viaje_privado.dpi_cliente 
+    public static final String VER_PRIVADO_SIN_TERMINAR="""
+                                                        SELECT viaje.*, viaje_privado.*
                                                         FROM viaje 
                                                         INNER JOIN viaje_privado ON viaje.id_viaje=viaje_privado.id_viaje 
-                                                        WHERE viaje_privado.dpi_cliente=?;
+                                                        WHERE viaje_privado.dpi_cliente=?
+                                                        AND viaje.estado_viaje IN ('PROGRAMADO', 'INICIADO', 'PENDIENTE', 'CONFIRMADO');
                                                         """;
+    
+    //PARA EL ADMIN, LE DEVUELVE LOS VIAJES QUE AUN NO SE HAN PAGADO O SE SIGUEN NEGOCIANDO
+    public static final String PRIVADOS_NEGOCIADOS_ADMIN="""
+                                                         SELECT viaje.*, viaje_privado.*
+                                                         FROM viaje
+                                                         INNER JOIN viaje_privado ON viaje.id_viaje= viaje_privado.id_viaje
+                                                         WHERE viaje.id_sucursal=?
+                                                         AND viaje.estado_viaje IN ('PENDIENTE', 'CONFIRMADO');
+                                                         """;
+    
+    //PARA EL CLIENTE, LE DEVUELVE LOS VIAJES QUE AUN SE ESTAN NEGOCIANDO DEL CLIENTE
+    public static final String PRIVADOS_NEGOCIADOS_CLIENTE="""
+                                                           SELECT viaje.*, viaje_privado.*
+                                                           FROM viaje
+                                                           INNER JOIN viaje_privado ON viaje.id_viaje = viaje_privado.id_viaje
+                                                           WHERE viaje_privado.dpi_cliente= ?
+                                                           AND viaje.estado_viaje IN ('PENDIENTE', 'CONFIRMADO');
+                                                           """;
+    
+    
     
     private Connection connection;
     
@@ -305,12 +288,11 @@ public class ViajesDAO {
         }
     }
     
-    public boolean modificarViajeRegular(LocalDateTime fechaSalida, LocalDateTime fechaLlegadaEstimada, int idRuta, int idViaje) throws SQLException {
+    public boolean modificarViajeRegular(LocalDateTime fechaSalida, LocalDateTime fechaLlegadaEstimada, int idViaje) throws SQLException {
         try (PreparedStatement ps=connection.prepareStatement(MODIFICAR_VIAJE_REGULAR)) {
             ps.setObject(1, fechaSalida);
             ps.setObject(2, fechaLlegadaEstimada);
-            ps.setInt(3, idRuta);
-            ps.setInt(4, idViaje);
+            ps.setInt(3, idViaje);
             return ps.executeUpdate() > 0;
         }
     }
@@ -336,7 +318,8 @@ public class ViajesDAO {
         }
     }
     
-    public List<ViajeRegularDTO> verViajesRegularesPorSucursal(int idSucursal) throws SQLException{
+    
+    public List<ViajeRegularDTO> viajesRegProgramados(int idSucursal) throws SQLException{
         List<ViajeRegularDTO> lista=new ArrayList<>();
         try(PreparedStatement ps=connection.prepareStatement(VER_VIAJES_REGULARES)){
             ps.setInt(1, idSucursal);
@@ -349,9 +332,9 @@ public class ViajesDAO {
         }
     }
     
-    public List<ViajePrivadoDTO> verSolicitudesPrivadoPorSucursal(int idSucursal) throws SQLException{
+    public List<ViajePrivadoDTO> viajesPriProgramados(int idSucursal) throws SQLException{
         List<ViajePrivadoDTO> lista=new ArrayList<>();
-        try(PreparedStatement ps= connection.prepareStatement(VER_SOLICITUDES_PRIVADO)){
+        try(PreparedStatement ps= connection.prepareStatement(VER_PROGRAMADOS_PRIVADO)){
             ps.setInt(1, idSucursal);
             try(ResultSet rs=ps.executeQuery()){
                 while (rs.next()) {
@@ -423,7 +406,7 @@ public class ViajesDAO {
         }
     }
     
-    public List<ViajeRegularDTO> verViajesRegularesPorChofer(String dpiChofer) throws SQLException{
+    public List<ViajeRegularDTO> viajesRegularesSinTerminarChofer(String dpiChofer) throws SQLException{
         List<ViajeRegularDTO> lista=new ArrayList<>();
         try (PreparedStatement ps=connection.prepareStatement(VER_VIAJES_REGULARES_POR_CHOFER)){
             ps.setString(1, dpiChofer);
@@ -436,7 +419,20 @@ public class ViajesDAO {
         return lista;
     }
     
-    public List<ViajePrivadoDTO> verViajesPrivadosPorChofer(String dpiChofer) throws SQLException {
+     public List<ViajeRegularDTO> viajesRegularesSinTerminarBus(String placa) throws SQLException{
+        List<ViajeRegularDTO> lista=new ArrayList<>();
+        try (PreparedStatement ps=connection.prepareStatement(VER_VIAJES_REGULARES_POR_BUS)){
+            ps.setString(1, placa);
+            try (ResultSet rs= ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(empaquetarViajeRegular(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    public List<ViajePrivadoDTO> privadosProgramadosChofer(String dpiChofer) throws SQLException {
         List<ViajePrivadoDTO> lista = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(VER_VIAJES_PRIVADOS_POR_CHOFER)){
             ps.setString(1, dpiChofer);
@@ -448,6 +444,47 @@ public class ViajesDAO {
         }
         return lista;
     }
+            
+    public List<ViajePrivadoDTO> verViajesPrivadoSinTerminar() throws SQLException {
+        List<ViajePrivadoDTO> lista = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(VER_PRIVADO_SIN_TERMINAR)){
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(empaquetarViajePrivado(rs));
+                }
+            }
+        }
+        return lista;
+    }
+    
+    
+    public List<ViajePrivadoDTO> privadoNegAdmin(int idSucural) throws SQLException{
+        List<ViajePrivadoDTO> lista=new ArrayList<>();
+        try (PreparedStatement ps=connection.prepareStatement(PRIVADOS_NEGOCIADOS_ADMIN)){
+            ps.setInt(1, idSucural);
+            try (ResultSet rs= ps.executeQuery()) { 
+                while (rs.next()) {
+                    lista.add(empaquetarViajePrivado(rs));
+                }
+            }
+        }
+        return lista;
+    }
+    
+    
+    public List<ViajePrivadoDTO> privadoNegCliente(String dpi) throws SQLException{
+        List<ViajePrivadoDTO> lista=new ArrayList<>();
+        try (PreparedStatement ps=connection.prepareStatement(PRIVADOS_NEGOCIADOS_CLIENTE)){
+            ps.setString(1, dpi);
+            try (ResultSet rs= ps.executeQuery()) { 
+                while (rs.next()) {
+                    lista.add(empaquetarViajePrivado(rs));
+                }
+            }
+        }
+        return lista;
+    }
+    
     
     
     //METODOS AUXILIARES SIN QUERY

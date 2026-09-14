@@ -21,6 +21,7 @@ public class BusDTO {
     private EstadoBus estadoBus;
     private boolean activo; 
     private int idSucursal;
+    private int idSucursalActual;
 
     //PARA INSTANCIAS
     public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, int kilometrajeActual, byte[] foto, int idSucursal) {
@@ -32,11 +33,12 @@ public class BusDTO {
         this.kilometrajeActual = kilometrajeActual;
         this.foto = foto;
         this.idSucursal=idSucursal;
+        this.idSucursalActual=idSucursal;
     }
     
     //PARA LECTURAS
     public BusDTO(String numeroPlaca, String modelo, String marca, int anoFabricacion, int capacidad, 
-            int kilometrajeActual, byte[] foto, EstadoBus estadoBus, boolean activo, int idSucursal) {
+            int kilometrajeActual, byte[] foto, EstadoBus estadoBus, boolean activo, int idSucursal, int idSucursalActual) {
         this.numeroPlaca = numeroPlaca;
         this.modelo = modelo;
         this.marca = marca;
@@ -47,6 +49,7 @@ public class BusDTO {
         this.estadoBus = estadoBus;
         this.activo = activo;
         this.idSucursal=idSucursal;
+        this.idSucursalActual=idSucursalActual;
     }
 
     public String getNumeroPlaca() {
@@ -128,6 +131,14 @@ public class BusDTO {
 
     public void setIdSucursal(int idSucursal) {
         this.idSucursal = idSucursal;
+    }
+
+    public int getIdSucursalActual() {
+        return idSucursalActual;
+    }
+
+    public void setIdSucursalActual(int idSucursalActual) {
+        this.idSucursalActual = idSucursalActual;
     }
     
     

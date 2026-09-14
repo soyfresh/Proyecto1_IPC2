@@ -45,7 +45,7 @@ public class RutaDAO {
     public static final String ELIMINAR_RUTA="DELETE FROM ruta WHERE id_ruta=?;";
 
     public static final String TIENE_VIAJES_ASOCIADOS="SELECT COUNT(*) AS viajes FROM viaje WHERE id_ruta=?;";
-    
+     
     
     private Connection connection;
     

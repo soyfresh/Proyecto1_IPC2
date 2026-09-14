@@ -32,8 +32,9 @@ public class BusDAO {
                                          foto, 
                                          estado, 
                                          activo, 
-                                         id_sucursal) 
-                                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                                         id_sucursal,
+                                         id_sucursal_actual) 
+                                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                                          """;
 
     public static final String REGISTRAR_MANTENIMIENTO_TALLER="""
@@ -58,17 +59,15 @@ public class BusDAO {
                                              """;
 
     public static final String AMENTAR_KILOMETRAJE="""
-                                                      UPDATE bus SET kilometraje_actual = kilometraje_actual + ? 
+                                                      UPDATE bus SET kilometraje_actual = ? 
                                                       WHERE numero_de_placa=?;
                                                       """;
 
     public static final String CAMBIAR_ESTADO_BUS="UPDATE bus SET estado=? WHERE numero_de_placa=?;";
 
     public static final String DESACTIVAR_BUS="UPDATE bus SET activo= FALSE WHERE numero_de_placa=?;";
-
+    
     public static final String OBTENER_BUSES_SUCURSAL="SELECT * FROM bus WHERE id_sucursal=? AND activo=TRUE;";
-
-    public static final String OBTENER_BUSES_ESTADO="SELECT * FROM bus WHERE estado=? AND activo=TRUE AND id_sucursal=?;";
 
     public static final String OBTENER_REGISTROS_TALLER_POR_BUS="""
                                                                   SELECT * 
@@ -76,6 +75,23 @@ public class BusDAO {
                                                                   WHERE numero_de_placa=? 
                                                                   ORDER BY fecha_mantenimiento DESC;
                                                                   """;
+    
+    /*
+    Estas dos querys son las que deben de mostrar los buses disponibles en el fronted
+    */
+    public static final String OBTENER_BUSES_ESTADO="SELECT * FROM bus WHERE estado=? AND activo=TRUE AND id_sucursal=?;";
+    
+    public static final String OBTENER_BUSES_PENDIENTES_RETORNO="""
+                                                            SELECT * FROM bus 
+                                                            WHERE estado= 'NO_DISPONIBLE' 
+                                                            AND activo=TRUE 
+                                                            AND id_sucursal != id_sucursal_actual
+                                                            AND id_sucursal_actual=?;
+                                                            """;
+
+    public static final String ACTUALIZAR_SUCURSAL_ACTUAL_BUS="""
+                                                            UPDATE bus SET id_sucursal_actual = ? WHERE numero_de_placa = ?;
+                                                            """;    
     
     private Connection connection;
     
@@ -95,6 +111,7 @@ public class BusDAO {
             ps.setString(8, String.valueOf(bus.getEstadoBus()));
             ps.setBoolean(9, bus.isActivo());
             ps.setInt(10, bus.getIdSucursal());
+            ps.setInt(11, bus.getIdSucursalActual());
             return ps.executeUpdate()>0;
         }
     }
@@ -199,6 +216,26 @@ public class BusDAO {
         }
     }
     
+    public List<BusDTO> obtenerBusesPendientesDeRetorno(int idSucursalActual) throws SQLException{
+    List<BusDTO> buses= new ArrayList<>();
+    try (PreparedStatement ps= connection.prepareStatement(OBTENER_BUSES_PENDIENTES_RETORNO)) {
+        ps.setInt(1, idSucursalActual);
+        try (ResultSet rs=ps.executeQuery()) {
+            while (rs.next()) {
+                buses.add(empaquetarBus(rs));
+            }
+        }
+    }
+    return buses;
+}
+
+    public boolean actualizarSucursalActual(String placa, int nuevaSucursalActual) throws SQLException{
+        try (PreparedStatement ps= connection.prepareStatement(ACTUALIZAR_SUCURSAL_ACTUAL_BUS)) {
+            ps.setInt(1, nuevaSucursalActual);
+            ps.setString(2, placa);
+            return ps.executeUpdate()>0;
+        }
+    }
     
     //METODOS AUXILIARES SIN QUERY
     public BusDTO empaquetarBus(ResultSet rs) throws SQLException{
@@ -212,7 +249,8 @@ public class BusDAO {
         EstadoBus estadoBus = EstadoBus.valueOf(rs.getString("estado"));
         boolean activo = rs.getBoolean("activo");
         int idSucursal = rs.getInt("id_sucursal");
-
+        int idSucursalActual=rs.getInt("id_sucursal_actual");
+        
         return new BusDTO(
             numeroPlaca, 
             modelo, 
@@ -223,7 +261,8 @@ public class BusDAO {
             foto, 
             estadoBus, 
             activo, 
-            idSucursal
+            idSucursal,
+            idSucursalActual
         );
     }
     

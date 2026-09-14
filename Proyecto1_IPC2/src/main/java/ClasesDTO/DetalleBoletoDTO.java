@@ -10,9 +10,9 @@ package ClasesDTO;
  */
 public class DetalleBoletoDTO {
     private int idBoleto;
-    private String idAsiento;
+    private int idAsiento;
 
-    public DetalleBoletoDTO(int idBoleto, String idAsiento) {
+    public DetalleBoletoDTO(int idBoleto, int idAsiento) {
         this.idBoleto = idBoleto;
         this.idAsiento = idAsiento;
     }
@@ -25,13 +25,13 @@ public class DetalleBoletoDTO {
         this.idBoleto = idBoleto;
     }
 
-    public String getIdAsiento() {
+    public int getIdAsiento() {
         return idAsiento;
     }
 
-    public void setIdAsiento(String idAsiento) {
+    public void setIdAsiento(int idAsiento) {
         this.idAsiento = idAsiento;
     }
-    
+
     
 }

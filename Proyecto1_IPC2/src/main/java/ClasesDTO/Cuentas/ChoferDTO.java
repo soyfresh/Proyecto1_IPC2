@@ -37,6 +37,12 @@ public class ChoferDTO extends CuentaDTO{
         this.foto = foto;
         this.idSucursal = idSucursal;
     }
+
+    public ChoferDTO(String contrasena, String correoElectronico, String dpi, String nombre, String nit, String direccion, String telefono) {
+        super(contrasena, correoElectronico, dpi, nombre, nit, direccion, telefono, TipoUsuario.CHOFER);
+    }
+    
+    
     
     //PARA LECTURAS
     public ChoferDTO(String contrasena, String correoElectronico, String dpi, String nombre, 

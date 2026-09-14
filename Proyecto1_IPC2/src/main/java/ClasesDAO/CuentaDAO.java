@@ -9,12 +9,14 @@ import ClasesDTO.Cuentas.AdministradorSucursalDTO;
 import ClasesDTO.Cuentas.ChoferDTO;
 import ClasesDTO.Cuentas.ClienteDTO;
 import ClasesDTO.Cuentas.CuentaDTO;
+import ClasesDTO.RegistroRecargaDTO;
 import clasesAuxiliares.TipoLicencia;
 import clasesAuxiliares.TipoUsuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ import java.util.List;
  *
  * @author dar333n
  */
-public class CuentasDAO {
+public class CuentaDAO {
     
     public static final String CREAR_CUENTA_PADRE="""
                                                   INSERT INTO cuenta (dpi, 
@@ -65,13 +67,13 @@ public class CuentasDAO {
                                                 WHERE dpi=?;
                                                 """;
     
-    public static final String AGREGAR_SALDO="UPDATE cuenta SET saldo=saldo+? WHERE dpi=?;";
+    public static final String AGREGAR_SALDO="UPDATE cuenta SET saldo=saldo+?  WHERE dpi=?;";
     
     public static final String QUITAR_SALDO="UPDATE cuenta SET saldo=saldo-? WHERE dpi=?;";
     
     public static final String CAMBIAR_CONSTRASENA="UPDATE cuenta SET contrasena=? WHERE dpi=?;";
     
-    public static final String CAMBIAR_ACTIVO="UPDATE cuenta SET activo=? WHERE dpi=?;";
+    public static final String DESACTIVAR="UPDATE cuenta SET activo=FALSE WHERE dpi=?;";
     
     public static final String OBTENER_CUENTA_CONTRASENA_CORREO="""
                                                                 SELECT cuenta.*, 
@@ -117,10 +119,50 @@ public class CuentasDAO {
                                                       SELECT cuenta.* FROM cuenta
                                                       INNER JOIN administrador_sucursal ON cuenta.dpi = administrador_sucursal.dpi;
                                                       """;
+    
+    public static final String LISTAR_ADMINS_SISTEMA="""
+                                                     SELECT cuenta.* FROM cuenta
+                                                     INNER JOIN administrador_sistema ON cuenta.dpi = administrador_sistema.dpi;
+                                                     """;
+    
+    
+    /*
+    REGISTRO DE RECARGA, VA JUNTO CON EL METODO DE AGREGAR SALDO 
+    */
+    
+    public static final String REGISTRAR_RECARGA="""
+                                                INSERT INTO registro_recarga (dpi, monto, fecha_recarga) 
+                                                VALUES (?, ?, ?);
+                                                """;
+    
+    public static final String OBTENER_RECARGAS_POR_DPI="""
+                                                        SELECT * FROM registro_recarga 
+                                                        WHERE dpi=? 
+                                                        ORDER BY id_recarga DESC;
+                                                        """;
 
+    
+    /*
+    VALIDACIONES 
+    */
+    
+    public static final String EXISTE_CORREO="""
+                                             SELECT COUNT(*) AS total FROM cuenta WHERE LOWER(correo_electronico)=LOWER(?);
+                                             """;
+    
+    public static final String EXISTE_DPI="SELECT COUNT(*) AS total FROM cuenta WHERE dpi=?;";
+    
+    public static final String ADMIN_SISTEM_ACTIVO="SELECT COUNT(*) AS total FROM cuenta WHERE  tipo='ADMINISTRADOR_SISTEMA'";
+    
+    public static final String VIAJES_PENDIENTES_CHOFER="""
+                                                        SELECT COUNT(*) AS TOTAL FROM cuenta
+                                                        INNER JOIN cuenta.dpi=viaje.dpi_chofer
+                                                        WHERE dpi=? AND estado_viaje IN('PROGRAMADO', 'INICIADO');
+                                                        """;
+    
     private Connection connection;
     
-    public CuentasDAO(Connection connection) {
+    public CuentaDAO(Connection connection) {
         this.connection = connection;
     }
 
@@ -216,6 +258,35 @@ public class CuentasDAO {
         }
     }
     
+    public boolean registrarRecarga(String dpi, double monto, LocalDate fechaRecarga) throws SQLException{
+        try (PreparedStatement ps= connection.prepareStatement(REGISTRAR_RECARGA)){
+            ps.setString(1, dpi);
+            ps.setDouble(2, monto);
+            ps.setObject(3, fechaRecarga);
+            return ps.executeUpdate()> 0;
+        }
+    }
+    
+    public List<RegistroRecargaDTO> obtenerHistorialPorDpi(String dpi) throws SQLException{
+        List<RegistroRecargaDTO> lista= new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(OBTENER_RECARGAS_POR_DPI)){
+            ps.setString(1, dpi);
+            try (ResultSet rs= ps.executeQuery()) {
+                while (rs.next()) {
+                    
+                    RegistroRecargaDTO recarga = new RegistroRecargaDTO(
+                            rs.getInt("id_recarga"),
+                            rs.getString("dpi"),
+                            rs.getDouble("monto"),
+                            rs.getDate("fecha_recarga").toLocalDate());
+                    
+                    lista.add(recarga);
+                }
+            }
+        }
+        return lista;
+    }
+    
     public boolean cambiarContrasena(String dpi, String contrasena) throws SQLException{
         try (PreparedStatement ps= connection.prepareStatement(CAMBIAR_CONSTRASENA)){
             ps.setString(1, contrasena);
@@ -225,10 +296,9 @@ public class CuentasDAO {
     }
     
     //para desactivar cuentas o reactiuvarlas en caso de ser chofer
-    public boolean cambiarEstado(String dpi, Boolean estado) throws SQLException{
-        try (PreparedStatement ps = connection.prepareStatement(CAMBIAR_ACTIVO)){
-            ps.setBoolean(1, estado);
-            ps.setString(2, dpi);
+    public boolean desactivarCuenta(String dpi) throws SQLException{
+        try (PreparedStatement ps = connection.prepareStatement(DESACTIVAR)){
+            ps.setString(1, dpi);
             return ps.executeUpdate()> 0;
         }
     }
@@ -283,7 +353,63 @@ public class CuentasDAO {
         return administradores;
     }
     
+    public List<AdministradorSistemaDTO> obtenerAdminSistema() throws SQLException{
+        List<AdministradorSistemaDTO> administradores= new ArrayList<>();
+        try (PreparedStatement ps= connection.prepareStatement(LISTAR_ADMINS_SISTEMA)){
+            try (ResultSet rs=ps.executeQuery()){
+                while (rs.next()) {
+                    administradores.add((AdministradorSistemaDTO) empaquetarCuenta(rs));
+                }
+            }
+        }
+        return administradores;
+    }
     
+    public boolean existeCorreo(String correo) throws SQLException{
+        try (PreparedStatement ps = connection.prepareStatement(EXISTE_CORREO)){
+            ps.setString(1, correo.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total") > 0;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean existeDpi(String dpi) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(EXISTE_DPI)) {
+            ps.setString(1, dpi.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total") > 0;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public int contarAdminSistemaActivos() throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(ADMIN_SISTEM_ACTIVO);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        }
+        return 0;
+    }
+    
+    public boolean tieneViajesPendientesChofer(String dpiChofer) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(VIAJES_PENDIENTES_CHOFER)) {
+            ps.setString(1, dpiChofer.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total") > 0;
+                }
+            }
+        }
+        return false;
+    }
     
     //METODOS AUXILIARES SIN QUERY
     public CuentaDTO empaquetarCuenta(ResultSet rs) throws SQLException{
