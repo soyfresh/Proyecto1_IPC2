@@ -32,14 +32,15 @@ public class SucursalDTO {
         this.departamento=departamento;
     }
 
-    public int getIdScucursal() {
+    public int getIdSucursal() {
         return idSucursal;
     }
 
-    public void setIdScucursal(int idScucursal) {
-        this.idSucursal = idScucursal;
+    public void setIdSucursal(int idSucursal) {
+        this.idSucursal = idSucursal;
     }
 
+    
     public String getDireccion() {
         return direccion;
     }

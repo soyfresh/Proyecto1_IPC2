@@ -73,7 +73,7 @@ public class SucursalDAO {
             ps.setString(1, sucursal.getDpiAdministradorSc());
             ps.setString(2, String.valueOf(sucursal.getDepartamento()));
             ps.setString(3, sucursal.getDireccion());
-            ps.setInt(4, sucursal.getIdScucursal());
+            ps.setInt(4, sucursal.getIdSucursal());
             return ps.executeUpdate()>0;
         }
     }

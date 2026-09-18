@@ -58,9 +58,9 @@ public class ServicioVenta {
 
                 //comparar que ninguno de los elegidos esten ocupados
                 List<DetalleBoletoDTO> ocupados= boletoDAO.obtenerAsientosOcupados(idViajeFn);
-                for (DetalleBoletoDTO ocupa : ocupados){
-                    if (numAsientos.contains(ocupa.getIdAsiento())){
-                        throw new SQLException();
+                for (DetalleBoletoDTO ocupa : ocupados) {
+                    if (numAsientosFn.contains(ocupa.getIdAsiento())) {
+                        throw new SQLException("El asiento " + ocupa.getIdAsiento() + " ya está ocupado.");
                     }
                 }
 

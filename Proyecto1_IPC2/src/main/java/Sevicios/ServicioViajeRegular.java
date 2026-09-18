@@ -319,7 +319,7 @@ public class ServicioViajeRegular {
                 busDao.actualizarSucursalActual(bus.getNumeroPlaca(), idSucursalDestino);
                 
                 //se compara si el destino es igual al id de la sucusal del bus
-                if(sucursal.getIdScucursal()!=bus.getIdSucursal()){
+                if(sucursal.getIdSucursal()!=bus.getIdSucursal()){
                    busDao.cambiarEstado(viaje.getPlacaBusAsignado(), EstadoBus.NO_DISPONIBLE); 
                 }else{
                     busDao.cambiarEstado(viaje.getPlacaBusAsignado(), EstadoBus.DISPONIBLE); 

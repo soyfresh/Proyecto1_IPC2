@@ -179,7 +179,7 @@ public class ServicioUsuarios {
         }
     }
     
-    public Boolean actualizarCuenta(String contrasena, String correoElectronico, String dpi, String nombre, String nit, 
+    public Boolean actualizarCuenta(String dpiOriginal, String correoOriginal, String contrasena, String correoElectronico, String dpi, String nombre, String nit, 
             String direccion, String telefono, String tipoUsuario)throws SQLException, DatoInvalidoException{
         
         try(Connection cone=adminConexion.getConnection()){
@@ -190,11 +190,13 @@ public class ServicioUsuarios {
 
                 validarCuentaBase(contrasena, correoElectronico, dpi, nombre, nit, direccion, telefono, tipoUsuario);
 
-                if (cuentaDao.existeDpi(dpi)) {
-                    throw new DatoInvalidoException("El DPI ingresado ya se encuentra registrado");
+                if (dpiOriginal != null && !dpiOriginal.trim().equalsIgnoreCase(dpi.trim())){
+                    if(cuentaDao.existeDpi(dpi)){
+                       throw new DatoInvalidoException("El DPI ingresado ya se encuentra registrado"); 
+                    }
                 }
 
-                if (cuentaDao.existeCorreo(correoElectronico)) {
+                if (correoElectronico!= null && !correoOriginal.trim().equalsIgnoreCase(correoElectronico) ){
                     throw new DatoInvalidoException("El correo electrónico ya está en uso");
                 }
                 
@@ -204,6 +206,8 @@ public class ServicioUsuarios {
                 }catch(Exception e){
                     throw new DatoInvalidoException();
                 }
+                
+                
 
                 CuentaDTO cuenta=null;
                 if(tipoUs.equals(TipoUsuario.CLIENTE)){

@@ -44,6 +44,7 @@ public class ViajePrivadoDTO extends ViajeDTO{
         this.precioEstimado=PrecioEstimado;
         this.departamentoOrigen=departamentoOrigen;
         this.departamentoDestino=departamentoDestino;
+        this.dpiCliente=dpiCliente;
     }
 
     //PARA LECTURAS-lectura completa del viaje

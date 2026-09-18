@@ -196,7 +196,7 @@ public class ViajesDAO {
                                                            FROM viaje
                                                            INNER JOIN viaje_privado ON viaje.id_viaje = viaje_privado.id_viaje
                                                            WHERE viaje_privado.dpi_cliente= ?
-                                                           AND viaje.estado_viaje IN ('PENDIENTE', 'CONFIRMADO');
+                                                           AND viaje.estado_viaje IN ('PENDIENTE', 'CONFIRMADO', 'PROGRAMADO');
                                                            """;
     
     

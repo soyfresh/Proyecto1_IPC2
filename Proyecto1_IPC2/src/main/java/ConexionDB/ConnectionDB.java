@@ -14,6 +14,14 @@ import java.sql.SQLException;
  */
 public class ConnectionDB {
     
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("No se pudo cargar el driver de MySQL: " + e.getMessage());
+        }
+    }
+    
     private static final String IP = "localhost";
     private static final int PUERTO = 3306;
     private static final String SCHEMA = "AppWeb_Buses";

@@ -33,8 +33,8 @@ public class CuentaDAO {
                                                   correo_electronico, 
                                                   contrasena, telefono, 
                                                   direccion, 
-                                                  saldo, tipo, activo)
-                                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);  
+                                                  saldo, tipo)
+                                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);  
                                                    """;
     
     
@@ -177,7 +177,6 @@ public class CuentaDAO {
             ps.setString(7, cuenta.getDireccion());
             ps.setDouble(8, cuenta.getSaldo());
             ps.setString(9, String.valueOf(cuenta.getTipoUsuario()));
-            ps.setBoolean(10, cuenta.isActivo());
             return ps.executeUpdate()>0;
         }
         
